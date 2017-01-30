@@ -8,37 +8,38 @@ class Repos extends React.Component {
     this.state = {repos: []};
   }
 
-	fetchRepos() {
-		// if we already have ajax request, cancel it
-		if (typeof this._source != typeof undefined) {
-			this._source.cancel('Operation canceled due to new request.')
-		}
+  fetchRepos() {
+    // cancel the previous request
+    if (typeof this._source != typeof undefined) {
+      this._source.cancel('Operation canceled due to new request.')
+    }
 
-		// set the new source of ajax request
-		this._source = axios.CancelToken.source();
-		
-		axios.get(`https://api.github.com/users/${this.props.username}/repos`, {
-			cancelToken: this._source.token
-		})
+    // save the new request for cancellation
+    this._source = axios.CancelToken.source();
+    
+    axios.get(`https://api.github.com/users/${this.props.username}/repos`,
+      // cancel token used by axios
+      { cancelToken: this._source.token }
+    )
       .then(response => this.setState({ repos: response.data }))
       .catch(error => {
-				 if (axios.isCancel(error)) {
-					 console.log('Request canceled', error);
-				 } else {
-					 console.log(error);
-				 }
-			});
-	}
+         if (axios.isCancel(error)) {
+           console.log('Request canceled', error);
+         } else {
+           console.log(error);
+         }
+      });
+  }
 
   componentDidMount() {
     this.fetchRepos();
   }
 
-	componentDidUpdate(prevProps) {
-		if (this.props.username != prevProps.username) {
-			this.fetchRepos();
-		}
-	}
+  componentDidUpdate(prevProps) {
+    if (this.props.username != prevProps.username) {
+      this.fetchRepos();
+    }
+  }
 
   render() {
     return (
@@ -53,17 +54,17 @@ class Repos extends React.Component {
 }
 
 class App extends React.Component {
-	constructor(props) {
-		super(props);
+  constructor(props) {
+    super(props);
     this.state = {username: 'facebook'};
-	}
+  }
 
-	render() {
+  render() {
     return (
       <div>
-				<button onClick={() => this.setState({username: 'facebook'})}>Facebook</button>
-				<button onClick={() => this.setState({username: 'microsoft'})}>Microsoft</button>
-				<button onClick={() => this.setState({username: 'google'})}>Google</button>
+        <button onClick={() => this.setState({username: 'facebook'})}>Facebook</button>
+        <button onClick={() => this.setState({username: 'microsoft'})}>Microsoft</button>
+        <button onClick={() => this.setState({username: 'google'})}>Google</button>
 
         <Repos username={this.state.username} />
       </div>
@@ -72,6 +73,6 @@ class App extends React.Component {
 }
 
 ReactDOM.render(
-	<App />,
-	document.getElementById('app')
+  <App />,
+  document.getElementById('app')
 )
