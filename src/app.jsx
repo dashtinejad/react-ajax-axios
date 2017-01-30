@@ -9,9 +9,25 @@ class Repos extends React.Component {
   }
 
 	fetchRepos() {
-		axios.get(`https://api.github.com/users/${this.props.username}/repos`)
+		// if we already have ajax request, cancel it
+		if (typeof this._source != typeof undefined) {
+			this._source.cancel('Operation canceled due to new request.')
+		}
+
+		// set the new source of ajax request
+		this._source = axios.CancelToken.source();
+		
+		axios.get(`https://api.github.com/users/${this.props.username}/repos`, {
+			cancelToken: this._source.token
+		})
       .then(response => this.setState({ repos: response.data }))
-      .catch(error => console.log(error));
+      .catch(error => {
+				 if (axios.isCancel(error)) {
+					 console.log('Request canceled', error);
+				 } else {
+					 console.log(error);
+				 }
+			});
 	}
 
   componentDidMount() {
