@@ -1,15 +1,15 @@
-# React Ajax with jQuery
+# React Ajax with axios
 
 ## Install
 
 1. Get the sourcecode:
     ```
-    $ git clone https://github.com/dashtinejad/react-ajax-jquery.git
+    $ git clone https://github.com/dashtinejad/react-ajax-axios.git
     ```
 
 2. Switch to its directory:
     ```
-    $ cd react-ajax-jquery
+    $ cd react-ajax-axios
     ```
 
 3. Run `npm install` command, it will install dependencies:
